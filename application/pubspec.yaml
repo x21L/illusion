@@ -31,9 +31,8 @@ dependencies:
     sdk: flutter
 
   camera: ^0.9.4+5
-  path_provider:
+  path_provider: ^2.0.8
   gallery_saver: ^2.3.2
-  image: ^3.1.1
   google_ml_kit: ^0.7.3
   screenshot: ^1.2.3
   argon_buttons_flutter: ^1.1.0

@@ -19,30 +19,35 @@ Future<void> chooseFilter(BuildContext context, List<Pose> poses) async {
   switch (await showDialog<Filter>(
       context: context,
       builder: (BuildContext context) {
-        return SimpleDialog(
-          title: const Text('Select Filter'),
-          children: <Widget>[
-            SimpleDialogOption(
+        if (poses.isNotEmpty) {
+          return SimpleDialog(
+            title: const Text('Select Filter'),
+            children: <Widget>[
+              SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(context, Filter.a);
+                  },
+                  child: _getFilterCard(
+                      'Number of poses', 'Found ${poses.length} poses')),
+              SimpleDialogOption(
                 onPressed: () {
-                  Navigator.pop(context, Filter.a);
+                  Navigator.pop(context, Filter.b);
                 },
-                child: _getFilterCard(
-                    'Number of poses', 'Found ${poses.length} poses')),
-            SimpleDialogOption(
-              onPressed: () {
-                Navigator.pop(context, Filter.b);
-              },
-              child: _getFilterCard('Found the following Landmarks',
-                  '${poses[0].landmarks.keys}'),
-            ),
-            SimpleDialogOption(
-              onPressed: () {
-                Navigator.pop(context, Filter.c);
-              },
-              child: _getFilterCard('Likelihood',
-                  'First landmark key: ${poses[0].landmarks.keys.first} likelihood: ${poses[0].landmarks.entries.first.value.likelihood}'),
-            ),
-          ],
+                child: _getFilterCard('Found the following Landmarks',
+                    '${poses[0].landmarks.keys}'),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, Filter.c);
+                },
+                child: _getFilterCard('Likelihood',
+                    'First landmark key: ${poses[0].landmarks.keys.first} likelihood: ${poses[0].landmarks.entries.first.value.likelihood}'),
+              ),
+            ],
+          );
+        }
+        return const SimpleDialog(
+          title: Text("No poses found 😔"),
         );
       })) {
     case Filter.a:
