@@ -22,7 +22,6 @@ class _DeepARCameraState extends State<DeepARCamera> {
   CameraMode cameraMode = config.cameraMode;
   DisplayMode displayMode = config.displayMode;
   int currentEffect = 0;
-
   List get effectList {
     switch (cameraMode) {
       case CameraMode.mask:

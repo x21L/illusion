@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:illusion/deepar_camera.dart';
 import 'dart:async';
 
@@ -13,6 +14,8 @@ class MyApp extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
     return const MaterialApp(
       title: _title,
       home: MyStatefulWidget(),
