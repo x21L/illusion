@@ -1,25 +1,63 @@
 import 'dart:async';
 
 import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
+import 'package:camera_deep_ar/camera_deep_ar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
+import 'package:illusion/choose_filter.dart';
 
-class CameraWidget extends StatefulWidget {
-  const CameraWidget({Key? key}) : super(key: key);
+import 'config.dart';
+import 'filters.dart';
+
+class DeepARCamera extends StatefulWidget {
+  const DeepARCamera({Key? key}) : super(key: key);
 
   @override
-  CameraAppState createState() => CameraAppState();
+  _DeepARCameraState createState() => _DeepARCameraState();
 }
 
-class CameraAppState extends State<CameraWidget> {
+class _DeepARCameraState extends State<DeepARCamera> {
+  final deepArController = CameraDeepArController(config);
+  bool isRecording = false;
+  CameraMode cameraMode = config.cameraMode;
+  DisplayMode displayMode = config.displayMode;
+  int currentEffect = 0;
+
+  List get effectList {
+    switch (cameraMode) {
+      case CameraMode.mask:
+        return Filters.masks.values.toList();
+
+      case CameraMode.effect:
+        return Filters.effects.values.toList();
+
+      case CameraMode.filter:
+        return Filters.filters.values.toList();
+
+      default:
+        return Filters.masks.values.toList();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    CameraDeepArController.checkPermissions();
+    deepArController.setEventHandler(DeepArEventHandler(onCameraReady: (v) {
+      setState(() {});
+    }, onSnapPhotoCompleted: (v) {
+      setState(() {});
+    }, onVideoRecordingComplete: (v) {
+      setState(() {});
+    }, onSwitchEffect: (v) {
+      setState(() {});
+    }));
   }
 
   @override
   void dispose() {
     super.dispose();
+    deepArController.dispose();
   }
 
   @override
@@ -30,7 +68,7 @@ class CameraAppState extends State<CameraWidget> {
       body: (Center(
           child: Transform.scale(
         scale: scale,
-        child: const Text('camera view'),
+        child: DeepArPreview(deepArController),
       ))),
       bottomNavigationBar: BottomAppBar(
         child: Row(
@@ -65,8 +103,13 @@ class CameraAppState extends State<CameraWidget> {
             const Spacer(),
             IconButton(
                 icon: const Icon(Icons.camera),
-                onPressed: () async {
-                  // chooseFilter(context, poses);
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return ChooseFilter(cameraMode, deepArController)
+                            .getMaskListView();
+                      });
                 }),
           ],
         ),
@@ -88,11 +131,43 @@ class CameraAppState extends State<CameraWidget> {
         onTap: (startTimer, btnState) {
           if (btnState == ButtonState.Idle) {
             startTimer(10);
-            Timer(const Duration(seconds: 10), _launchURL);
+            Timer(const Duration(seconds: 10), _takepicture);
           }
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+
+  void _takepicture() {
+    deepArController.snapPhoto();
+    _showTakenDialog();
+  }
+
+  Future<void> _showTakenDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Picture saved successfully 📸'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('At the desk you can print it'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:illusion/deepar_camera.dart';
 import 'dart:async';
-
-import 'package:illusion/photo_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,7 +49,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           backgroundColor: Colors.cyan,
         ),
         body: const Center(
-          child: CameraWidget(),
+          child: DeepARCamera(),
         ));
   }
 }
