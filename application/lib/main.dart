@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
 import 'dart:async';
-import 'photo_view.dart';
 
-List<CameraDescription> cameras = List.empty();
+import 'package:illusion/photo_view.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  cameras = await availableCameras();
   runApp(const MyApp());
 }
 
@@ -33,8 +31,6 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   late StreamSubscription<dynamic> _streamSubscription;
 
-  CameraWidget cameraWidget = CameraWidget(cameras);
-
   @override
   void initState() {
     super.initState();
@@ -53,8 +49,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           title: const Text('illusion'),
           backgroundColor: Colors.cyan,
         ),
-        body: Center(
-          child: cameraWidget,
+        body: const Center(
+          child: CameraWidget(),
         ));
   }
 }
