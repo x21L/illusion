@@ -44,6 +44,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-# Do not upload the config file with the release keys
-/lib/config.dart
